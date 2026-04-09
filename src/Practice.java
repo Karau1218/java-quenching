@@ -67,7 +67,7 @@ public class Practice {
     public static Set<String> adults(Map<String, Integer> ages) {
         // return null;
           if (ages == null) {
-            throw new NullPointerException("Ages cannot be null");
+            throw new NullPointerException("Ages cant be null");
         }
 
         Set<String> result = new HashSet<>();
@@ -92,7 +92,7 @@ public class Practice {
     public static int biggestNumber(ListNode<Integer> head) {
         // return 0;
         if (head == null) {
-            throw new IllegalArgumentException("Linked list cannot be null");
+            throw new IllegalArgumentException("Linked list cant be null");
         }
 
         int max = head.data;
@@ -192,7 +192,7 @@ public class Practice {
     return sumAtLevel(root.left, level - 1) 
          + sumAtLevel(root.right, level - 1);
 }
-    }
+    
 
 
     /**
@@ -206,8 +206,25 @@ public class Practice {
      * @return true if the sums are equal, false otherwise
      */
     public static boolean sumMatch(BinaryTreeNode<Integer> root, ListNode<Integer> head) {
-        return false;
+        // return false;
+         return treeSum(root) == listSum(head);
+}
+
+private static int treeSum(BinaryTreeNode<Integer> root) {
+    if (root == null) return 0;
+    return root.data + treeSum(root.left) + treeSum(root.right);
+}
+
+private static int listSum(ListNode<Integer> head) {
+    int sum = 0;
+    ListNode<Integer> current = head;
+    while (current != null) {
+        sum += current.data;
+        current = current.next;
     }
+    return sum;
+}
+    
 
     /**
      * Returns the sum of all the nodes in a non-binary tree.
@@ -218,7 +235,16 @@ public class Practice {
      * @return the sum of all the tree's values
      */
     public static int nbSum(TreeNode<Integer> root) {
-        return 0;
+        // return 0;
+        if (root == null) return 0;
+
+    int sum = root.data;
+
+    for (TreeNode<Integer> child : root.children) {
+        sum += nbSum(child);
+    }
+
+    return sum;
     }
 
     /**
@@ -250,7 +276,21 @@ public class Practice {
      * @return the count of nodes that do not have siblings, EXCLUDING THE ROOT
      */
     public static int onlyChildCount(TreeNode<?> root) {
-        return 0;
+        // return 0;
+         if (root == null) return 0;
+
+    int count = 0;
+
+    for (TreeNode<?> child : root.children) {
+        // If parent has exactly ONE child → that child is an only child
+        if (root.children.size() == 1) {
+            count += 1;
+        }
+        // Recurse into subtree
+        count += onlyChildCount(child);
+    }
+
+    return count;
     }
 
     /**
@@ -288,5 +328,27 @@ public class Practice {
      * @return the depth of the tree, or 0 if the tree is null or the root is not present in the tree
      */
     public static <T> int maxDepth(Map<T, List<T>> tree, T root) {
+        // return 0;
+          if (tree == null || root == null || !tree.containsKey(root)) {
         return 0;
     }
+
+    return depthHelper(tree, root);
+}
+
+private static <T> int depthHelper(Map<T, List<T>> tree, T node) {
+    List<T> children = tree.get(node);
+
+    // If no children → leaf node
+    if (children == null || children.isEmpty()) {
+        return 1;
+    }
+
+    int max = 0;
+    for (T child : children) {
+        max = Math.max(max, depthHelper(tree, child));
+    }
+
+    return 1 + max;
+    }
+}
